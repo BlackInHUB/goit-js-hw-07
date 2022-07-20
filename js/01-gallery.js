@@ -18,17 +18,25 @@ function onImgModal(event) {
   event.preventDefault();
 
   if (event.target.classList.contains('gallery__image')) {
-    const instance = basicLightbox.create(`
-    <img src="${event.target.dataset.source}" width="800" height="600">
-`);
+    const galleryModal = basicLightbox.create(
+      `
+    <img src="${event.target.dataset.source}" width="800" height="600">`,
+      {
+        onShow: () => {
+          window.addEventListener('keydown', onEscClose);
+        },
+        onClose: () => {
+          window.removeEventListener('keydown', onEscClose);
+        },
+      }
+    );
 
-    instance.show();
+    galleryModal.show();
 
-    addEventListener('keydown', escClose);
-
-    function escClose(event) {
+    function onEscClose(event) {
+      console.log(event);
       if (event.code === 'Escape') {
-        instance.close();
+        galleryModal.close();
       }
     }
   }
